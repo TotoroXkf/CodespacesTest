@@ -32,8 +32,7 @@ function getLongestSubString(str1, str2) {
         }
         count--;
     }
-
-    return maxLen;
+    return str1.substring(resultColumn-maxLen+1,resultColumn+1);
 }
 
 const str1 = '1AB2345CD';
