@@ -1,3 +1,8 @@
+/**
+ * @param {string} str1 
+ * @param {string} str2 
+ * @returns {string}
+ */
 function getLongestSubString(str1, str2) {
     let dpValue = 0;
     let maxLen = 0;
