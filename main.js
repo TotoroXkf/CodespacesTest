@@ -40,6 +40,4 @@ function getLongestSubString(str1, str2) {
     return str1.substring(resultColumn-maxLen+1,resultColumn+1);
 }
 
-const str1 = '1AB2345CD';
-const str2 = '12345EF';
-console.log(getLongestSubString(str1, str2));
+module.exports = getLongestSubString;
