@@ -1,82 +1,62 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Solution {
-    private LinkedList<Character> symbolStack = new LinkedList<>();
-    private LinkedList<Integer> numStack = new LinkedList<>();
-    private int index = 0;
+class Solution {
+    private List<List<Integer>> result = new ArrayList<>();
 
-    public int calculate(String s) {
-        while (index < s.length()) {
-            char c = s.charAt(index);
-            if (Character.isDigit(c)) {
-                numStack.push(getNum(s));
-            } else if (c == ' ') {
-                index++;
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        int right = buildings[0][1];
+        int index = 1;
+        int preEdge = 0;
+        while (index < buildings.length) {
+            if (buildings[index][0] > right) {
+                int[][] subBuildings = new int[index - preEdge][3];
+                System.arraycopy(buildings, preEdge, subBuildings, 0, index - preEdge);
+                right = buildings[index][1];
+                preEdge = index;
+                putSkyline(subBuildings);
             } else {
-                int currentSymbolLevel = getSymbolLevel(c);
-                while (!symbolStack.isEmpty() && getSymbolLevel(symbolStack.peek()) >= currentSymbolLevel) {
-                    calculateOnce();
-                }
-                symbolStack.push(c);
-                index++;
+                right = Math.max(right, buildings[index][1]);
             }
-        }
-        while (!symbolStack.isEmpty()) {
-            calculateOnce();
-        }
-        return numStack.peek();
-    }
-
-    private int getNum(String s) {
-        int result = 0;
-        for (; index < s.length(); index++) {
-            char c = s.charAt(index);
-            if (Character.isDigit(c)) {
-                result = result * 10 + (c - '0');
-            } else {
-                break;
-            }
+            index++;
         }
         return result;
     }
 
-    private void calculateOnce() {
-        if (numStack.size() < 2 || symbolStack.isEmpty()) {
-            return;
+    private List<List<Integer>> putSkyline(int[][] buildings) {
+        List<List<Integer>> result = new ArrayList<>();
+        putAnswer(result, buildings[0][0], buildings[0][2]);
+        int[] next = getNext(buildings);
+        int current = 0;
+        while (next[current] != current) {
+            int[] point = getPoint(buildings[current], buildings[next[current]]);
+            putAnswer(result, point[0], point[1]);
         }
-        int numRight = numStack.pop();
-        int numLeft = numStack.pop();
-        char symbol = symbolStack.pop();
-        switch (symbol) {
-            case '+':
-                numStack.push(numLeft + numRight);
-                break;
-            case '-':
-                numStack.push(numLeft - numRight);
-                break;
-            case '*':
-                numStack.push(numLeft * numRight);
-                break;
-            case '/':
-                numStack.push(numLeft / numRight);
-                break;
-            default:
-                break;
-        }
+        putAnswer(result, buildings[current][1], 0);
+        return result;
     }
 
-    private int getSymbolLevel(char symbol) {
-        switch (symbol) {
-            case '+':
-                return 1;
-            case '-':
-                return 1;
-            case '*':
-                return 2;
-            case '/':
-                return 2;
-            default:
-                return 0;
+    private void putAnswer(List<List<Integer>> result, int x, int y) {
+        List<Integer> answer = new ArrayList<>();
+        answer.add(x);
+        answer.add(y);
+    }
+
+    private int[] getPoint(int[] current, int[] next) {
+
+    }
+
+    private int[] getNext(int[][] buildings) {
+        int[] result = new int[buildings.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = i;
         }
+
+    }
+
+    private boolean isIntersect(int left1, int right1, int left2, int right2) {
+        int left = Math.max(left1, left2);
+        int right = Math.min(right1, right2);
+        return left <= right;
     }
 }
