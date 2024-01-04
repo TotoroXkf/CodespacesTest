@@ -2,61 +2,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
-    private List<List<Integer>> result = new ArrayList<>();
-
-    public List<List<Integer>> getSkyline(int[][] buildings) {
-        int right = buildings[0][1];
-        int index = 1;
-        int preEdge = 0;
-        while (index < buildings.length) {
-            if (buildings[index][0] > right) {
-                int[][] subBuildings = new int[index - preEdge][3];
-                System.arraycopy(buildings, preEdge, subBuildings, 0, index - preEdge);
-                right = buildings[index][1];
-                preEdge = index;
-                putSkyline(subBuildings);
+    public List<Integer> majorityElement(int[] nums) {
+        int element1 = 0;
+        int element2 = 0;
+        int vote1 = 0;
+        int vote2 = 0;
+        for (int num : nums) {
+            if (vote1 > 0 && num == element1) {
+                vote1++;
+            } else if (vote2 > 0 && num == element2) {
+                vote2++;
+            } else if (vote1 == 0) {
+                vote1++;
+                element1 = num;
+            } else if (vote2 == 0) {
+                vote2++;
+                element2 = num;
             } else {
-                right = Math.max(right, buildings[index][1]);
+                vote1--;
+                vote2--;
             }
-            index++;
+        }
+        int cnt1 = 0;
+        int cnt2 = 0;
+        for (int num : nums) {
+            if (num == element1) {
+                cnt1++;
+            } else if (num == element2) {
+                cnt2++;
+            }
+        }
+        List<Integer> result = new ArrayList<>();
+        if (cnt1 > nums.length / 3) {
+            result.add(element1);
+        }
+        if (cnt2 > nums.length / 3) {
+            result.add(element2);
         }
         return result;
-    }
-
-    private List<List<Integer>> putSkyline(int[][] buildings) {
-        List<List<Integer>> result = new ArrayList<>();
-        putAnswer(result, buildings[0][0], buildings[0][2]);
-        int[] next = getNext(buildings);
-        int current = 0;
-        while (next[current] != current) {
-            int[] point = getPoint(buildings[current], buildings[next[current]]);
-            putAnswer(result, point[0], point[1]);
-        }
-        putAnswer(result, buildings[current][1], 0);
-        return result;
-    }
-
-    private void putAnswer(List<List<Integer>> result, int x, int y) {
-        List<Integer> answer = new ArrayList<>();
-        answer.add(x);
-        answer.add(y);
-    }
-
-    private int[] getPoint(int[] current, int[] next) {
-
-    }
-
-    private int[] getNext(int[][] buildings) {
-        int[] result = new int[buildings.length];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = i;
-        }
-
-    }
-
-    private boolean isIntersect(int left1, int right1, int left2, int right2) {
-        int left = Math.max(left1, left2);
-        int right = Math.min(right1, right2);
-        return left <= right;
     }
 }
