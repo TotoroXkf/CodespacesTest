@@ -1,44 +1,17 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class Solution {
-    public List<Integer> majorityElement(int[] nums) {
-        int element1 = 0;
-        int element2 = 0;
-        int vote1 = 0;
-        int vote2 = 0;
-        for (int num : nums) {
-            if (vote1 > 0 && num == element1) {
-                vote1++;
-            } else if (vote2 > 0 && num == element2) {
-                vote2++;
-            } else if (vote1 == 0) {
-                vote1++;
-                element1 = num;
-            } else if (vote2 == 0) {
-                vote2++;
-                element2 = num;
-            } else {
-                vote1--;
-                vote2--;
-            }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
         }
-        int cnt1 = 0;
-        int cnt2 = 0;
-        for (int num : nums) {
-            if (num == element1) {
-                cnt1++;
-            } else if (num == element2) {
-                cnt2++;
-            }
+        if (root.val == p.val || root.val == q.val) {
+            return root;
         }
-        List<Integer> result = new ArrayList<>();
-        if (cnt1 > nums.length / 3) {
-            result.add(element1);
+        if (root.val < Math.min(p.val, q.val)) {
+            return lowestCommonAncestor(root.right, p, q);
         }
-        if (cnt2 > nums.length / 3) {
-            result.add(element2);
+        if (root.val > Math.max(p.val, q.val)) {
+            return lowestCommonAncestor(root.left, p, q);
         }
-        return result;
+        return root;
     }
 }
