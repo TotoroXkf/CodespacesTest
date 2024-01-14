@@ -1,21 +1,16 @@
 class Solution {
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        if (root == null) {
-            return null;
+    public int[] productExceptSelf(int[] nums) {
+        int[] result = new int[nums.length];
+        result[0] = nums[0];
+        for (int i = 1; i < result.length; i++) {
+            result[i] = result[i - 1] * nums[i];
         }
-        if (root.val == p.val || root.val == q.val) {
-            return root;
+        int right = 1;
+        for (int i = result.length - 1; i > 0; i--) {
+            result[i] = result[i - 1] * right;
+            right *= nums[i];
         }
-        TreeNode leftResult = lowestCommonAncestor(root.left, p, q);
-        TreeNode rightResult = lowestCommonAncestor(root.right, p, q);
-        if (leftResult != null && rightResult != null) {
-            return root;
-        } else if (leftResult != null) {
-            return leftResult;
-        } else if (rightResult != null) {
-            return rightResult;
-        } else {
-            return null;
-        }
+        result[0] = right;
+        return result;
     }
 }
