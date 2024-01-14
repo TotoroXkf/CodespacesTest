@@ -6,12 +6,16 @@ class Solution {
         if (root.val == p.val || root.val == q.val) {
             return root;
         }
-        if (root.val < Math.min(p.val, q.val)) {
-            return lowestCommonAncestor(root.right, p, q);
+        TreeNode leftResult = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightResult = lowestCommonAncestor(root.right, p, q);
+        if (leftResult != null && rightResult != null) {
+            return root;
+        } else if (leftResult != null) {
+            return leftResult;
+        } else if (rightResult != null) {
+            return rightResult;
+        } else {
+            return null;
         }
-        if (root.val > Math.max(p.val, q.val)) {
-            return lowestCommonAncestor(root.left, p, q);
-        }
-        return root;
     }
 }
